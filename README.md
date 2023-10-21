@@ -4,6 +4,7 @@
  respective account.
 
 As for now we have decided to use react for frontend and mongodb/nodejs/express for backend.
+For face recognition we would be using HOG(Histogram of Oriented Gradients) method. 
 
 OUR TEAM:
 Frontend- Aashi Gupta
