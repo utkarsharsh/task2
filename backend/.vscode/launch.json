@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/web development/backend",
-      "program": "d:/web development/backend/build/Debug/outDebug",
+      "cwd": "d:/big data task 2/task2/backend",
+      "program": "d:/big data task 2/task2/backend/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
