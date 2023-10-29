@@ -1,1 +1,1 @@
- var a=req.file.originalname + '-' + Date.now();
+console.log(totaluser);

@@ -6,8 +6,12 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import {v2 as cloudinary} from 'cloudinary';
+import  cors  from 'cors';
+
+
 // import fileUpload from 'express-fileupload'
 const app=express();
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 dotenv.config(); 
 
@@ -23,8 +27,11 @@ cloudinary.config({
 
 
 // app.use(fileUpload());
-
-mongoose.connect('mongodb://127.0.0.1:27017/test',);
+try{
+ await mongoose.connect('mongodb+srv://harshupadhyay7786:mnbvcxz@cluster0.ypptwdf.mongodb.net/test2');}
+catch (err){
+console.log(err);
+}
 const kittySchema = new mongoose.Schema({
 
     name: String,
@@ -72,10 +79,14 @@ let a={};
 
 app.post("/submit",upload.single('image'), async(req,res)=>{
    
- 
-
- var a=req.file.originalname + '-' + Date.now();
- 
+ let a="";
+ console.log(req.body);
+// if(req.body.image ){
+//   a=req.file.originalname + '-' + Date.now();
+// }
+// else{
+//     res.send("202");
+// }
 
 
 
@@ -84,7 +95,7 @@ app.post("/submit",upload.single('image'), async(req,res)=>{
 
 
 // bycrption
-if(req.body.password!=null){
+if(req.body.password != '' &&  req.body.image!='' && req.body.name!=''){
 bcrypt.genSalt(10,  async function(err, salt) {
     bcrypt.hash(req.body.password, salt, async function(err, hash) {
 if(err){
@@ -102,9 +113,10 @@ else{
    // cloudnary is here...
    
          await cloudinary.uploader.upload(req.file.path,
-        { public_id:req.body.name },function(error,result){
+        { public_id:req.body.name },function  (error,result){
+            console.log(result);
             profileurl=result.url;
-        })
+        });
         
        
        
@@ -135,14 +147,18 @@ imageurl:profileurl,
     );
 }
 else{
-    res.send("enter password");
+    res.status(404).send("what?");
 }
 
 });
 
     // login 
     app.post("/login",async (req,res)=>{
-        
+        console.log(req.body);
+        if(req.body.password=="" || req.body.name=="" ){
+            res.status(404).send("nogood");
+        }
+        else{
   const userpassword= await userinfo.findOne({name : req.body.name});
  console.log(userpassword);
   bcrypt.compare(req.body.password,userpassword.password, function(err, response) {
@@ -156,31 +172,44 @@ else{
         
     }
     else {
-        console.log("not match");
+        res.status(404).send("nogood");
     }
 });
-
+        }
     });
     
 
-       
-    
+  let totaluser= await    userinfo.find();
+    // console.log(totaluser);
 
 
     
 
-app.get("/home",(req,res)=>{
+app.get("/home", async (req,res)=>{
     console.log(req.headers);
     let token=req.headers.authorization;
-token=token.split(" ");
+
+console.log(token);
+if(token=="Bearer abcc"){
+    res.send("nobro");
+    console.log("m");
+}
+else{
+    token=token.split(" ");
     const verified = jwt.verify(token[1], jwtSecretKey); 
+    let currentuser= await userinfo.findOne({_id: verified.id})
     if(verified){
 
-        res.send("succesfull ");
+        res.send({
+            totalusers:totaluser,
+            currentusers :currentuser
+
+        });
     }
     else{
-        res.send("unsuccesfull");
-    }
+        res.send(
+           "nobro"  );
+    }}
 });
 
 app.listen(80,(err)=>{

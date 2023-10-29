@@ -69,6 +69,10 @@ cursor: pointer;
   background-color: #eae3e3;
   height: 420px;
   overflow-y:auto ;
+  
+}
+::-webkit-scrollbar{
+  display:none;
 }
 .allpresent{
   text-align: center;
@@ -129,6 +133,8 @@ background-color: aliceblue;
 border-radius: 12px;
 margin-left: 3px;
 margin-right: 3px;
+min-width: 90px;
+min-height: 66px;
 
 }
 .mainicon{
